@@ -10,7 +10,7 @@
     "browser_action": {
         "default_icon": "icons/basketball.png",
         "default_title": "TraderMode",
-        "default_popup": "popup/traderMode.html"
+        "default_popup": "popup/popupTrader.html"
     },
     "content_scripts": [
         {

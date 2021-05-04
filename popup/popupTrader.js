@@ -1,11 +1,38 @@
 /**
- * CSS to hide unnecessary elemtents on the website. 
- * Only show the purchase button
- * 
+ * CSS to hide everything on the page,
+ * except for elements that have the "beastify-image" class.
  */
 const hidePage = `body > :not(.beastify-image) {
-    display: none;
-  }`;
+  display: none;
+}`;
+
+/**
+ * Listen for clicks on the buttons, and send the appropriate message to
+ * the content script in the page.
+ */
+function isTraderModeOn() {
+  document.addEventListener("on", (e) => {
+    function traderMode(tabs) {}
+
+    /**
+     * Just log the error to the console.
+     */
+    function reportError(error) {
+      console.error(`Could not instant purchase: ${error}`);
+    }
+
+    /**
+     * Get the active tab,
+     * then call "beastify()" or "reset()" as appropriate.
+     */
+    if (e.target.contains("trader")) {
+      browser.tabs
+        .query({ active: true, currentWindow: true })
+        .then(traderMode)
+        .catch(reportError);
+    }
+  });
+}
 
 /**
  * There was an error executing the script.
@@ -23,6 +50,6 @@ function reportExecuteScriptError(error) {
  * If we couldn't inject the script, handle the error.
  */
 browser.tabs
-  .executeScript({ file: "/content_scripts/beastify.js" })
+  .executeScript({ file: "/content_scripts/traderMode.js" })
   .then(listenForClicks)
   .catch(reportExecuteScriptError);
