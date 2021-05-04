@@ -13,9 +13,9 @@
    * Listen for messages from the background script.
    * Call "beastify()" or "reset()".
    */
-  browser.runtime.onMessage.addListener((message) => {
-    if (message.command === "on") {
-      clickPurchaseButton();
-    }
-  });
+//   browser.runtime.onMessage.addListener((message) => {
+//     if (message.command === "on") {
+//       clickPurchaseButton();
+//     }
+//   });
 })();
