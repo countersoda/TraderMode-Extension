@@ -5,12 +5,13 @@
     "description": "Supports the purchase of NBATopshot moments",
     "homepage_url": "https://github.com/countersoda/TraderMode-Extension",
     "permissions": [
-        "activeTab"
+        "activeTab",
+        "storage"
     ],
     "browser_action": {
-        "default_icon": "icons/basketball.png",
+        "default_icon": "src/icons/basketball.png",
         "default_title": "TraderMode",
-        "default_popup": "popup/popupTrader.html"
+        "default_popup": "src/popup/popupTrader.html"
     },
     "content_scripts": [
         {
@@ -18,7 +19,7 @@
                 "https://nbatopshot.com/*"
             ],
             "js": [
-                "traderMode.js"
+                "/src/content_scripts/traderMode.js"
             ]
         }
     ]
