@@ -9,7 +9,7 @@
         "storage"
     ],
     "browser_action": {
-        "default_icon": "src/icons/basketball.png",
+        "default_icon": "src/icons/icon.png",
         "default_title": "TraderMode",
         "default_popup": "src/popup/popupTrader.html"
     },
@@ -19,7 +19,7 @@
                 "https://nbatopshot.com/moment/*"
             ],
             "js": [
-                "/src/content_scripts/traderMode.js"
+                "/src/content_scripts/instantBuy.js"
             ]
         }
     ]

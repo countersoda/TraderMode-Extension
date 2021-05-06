@@ -9,11 +9,11 @@ async function setValue(value) {
 async function init() {
   var value = myStorage.getItem("value");
   bVal = value === "true" ? true : false;
+  document.querySelector("#traderCheckBox").checked = bVal;
   if (value === undefined) {
     isOn = false;
     setValue(isOn);
   }
-  document.querySelector("#traderCheckBox").checked = bVal;
   setValue(bVal);
 }
 
@@ -31,16 +31,18 @@ function reportExecuteScriptError(error) {
 
 document.getElementById("traderToggle").onchange = function () {
   setValue(!isOn);
-  traderOn().catch(console.log);
 };
 
 async function traderOn() {
-  if (isOn) {
-    console.log("Execute Script");
+  if (isOn !== undefined && isOn) {
     browser.tabs
-      .executeScript({ file: "/src/content_scripts/traderMode.js" })
-      .catch(reportExecuteScriptError)
+      .executeScript({ file: "/src/content_scripts/instantBuy.js" })
+      .catch(reportExecuteScriptError);
   }
 }
+
+document.getElementById("traderButton").onclick = function () {
+  traderOn().catch(console.log);
+};
 
 traderOn().catch(console.log);
