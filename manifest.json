@@ -16,7 +16,7 @@
     "content_scripts": [
         {
             "matches": [
-                "https://nbatopshot.com/*"
+                "https://nbatopshot.com/moment/*"
             ],
             "js": [
                 "/src/content_scripts/traderMode.js"

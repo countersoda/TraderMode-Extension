@@ -3,14 +3,12 @@ myStorage = window.localStorage;
 
 async function setValue(value) {
   isOn = value;
-  console.log("Is on ", isOn);
   myStorage.setItem("value", value);
 }
 
 async function init() {
   var value = myStorage.getItem("value");
   bVal = value === "true" ? true : false;
-  console.log(value);
   if (value === undefined) {
     isOn = false;
     setValue(isOn);
@@ -28,19 +26,21 @@ init().catch((e) => console.log("ERROR:\n" + e));
 function reportExecuteScriptError(error) {
   // document.querySelector("#popup-content").classList.add("hidden");
   document.querySelector("#error-content").classList.remove("hidden");
-  console.error(
-    `Failed to execute traderMode content script: ${error.message}`
-  );
+  console.log("Failed to execute traderMode content script: ", error);
 }
-/**
- * When the popup loads, inject a content script into the active tab,
- * and add a click handler.
- * If we couldn't inject the script, handle the error.
- */
+
 document.getElementById("traderToggle").onchange = function () {
   setValue(!isOn);
+  traderOn().catch(console.log);
 };
 
-browser.tabs
-  .executeScript({ file: "/src/content_scripts/traderMode.js" })
-  .catch(reportExecuteScriptError);
+async function traderOn() {
+  if (isOn) {
+    console.log("Execute Script");
+    browser.tabs
+      .executeScript({ file: "/src/content_scripts/traderMode.js" })
+      .catch(reportExecuteScriptError)
+  }
+}
+
+traderOn().catch(console.log);
