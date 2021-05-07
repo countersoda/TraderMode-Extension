@@ -1,67 +1,66 @@
-// var isOn;
-// myStorage = window.localStorage;
+var isOn;
+myStorage = browser.storage.local;
 
-// async function init() {
-//   var value = myStorage.getItem("value");
-//   bVal = value === "true" ? true : false;
-//   document.querySelector("#traderCheckBox").checked = bVal;
+let buttonOn = {
+  value: false,
+};
 
-//   if (value === undefined) {
-//     setValue(false);
-//   } else {
-//     setValue(bVal);
-//     if (bVal) {
-//     }
-//   }
-// }
+async function init() {
+  var value;
+  myStorage
+    .get("buttonOn")
+    .then((item) => {
+      value = item.buttonOn.value;
+    })
+    .catch(console.log);
+  bVal = value === "true" ? true : false;
+  document.querySelector("#traderCheckBox").checked = bVal;
 
-// async function setValue(value) {
-//   isOn = value;
-//   myStorage.setItem("value", value);
-// }
+  if (value === undefined) {
+    setValue(false);
+  } else {
+    setValue(bVal);
+    if (bVal) {
+      send("init");
+    }
+  }
+}
 
-var portFromCS;
+async function setValue(value) {
+  isOn = value;
+  buttonOn.value = value;
+  myStorage.set({ buttonOn });
+  console.log(buttonOn);
+}
 
-function connected(p) {
-  portFromCS = p;
-  portFromCS.postMessage({greeting: "hi there content script!"});
-  portFromCS.onMessage.addListener(function(m) {
-    console.log("In background script, received message from content script")
-    console.log(m.greeting);
+function send(message) {
+  browser.tabs.query({ currentWindow: true }).then((tabs) => {
+    for (let i = 0; i < tabs.length; i++) {
+      browser.tabs
+        .sendMessage(tabs[i].id, { command: message })
+        .catch(console.log);
+    }
   });
 }
 
-browser.runtime.onConnect.addListener(connected);
+/**
+ * There was an error executing the script.
+ * Display the popup's error message, and hide the normal UI.
+ */
+function reportExecuteScriptError(error) {
+  document.querySelector("#error-content").classList.remove("hidden");
+  console.log("Failed to execute traderMode content script: ", error);
+}
 
-browser.browserAction.onClicked.addListener(function() {
-  portFromCS.postMessage({greeting: "they clicked the button!"});
-});
+document.getElementById("traderToggle").onchange = function () {
+  setValue(!isOn);
+};
 
-// // function traderOn() {
-// //   if (isOn !== undefined && isOn) {
-// //     browser.tabs
-// //       .executeScript({ file: "/src/content_scripts/instantBuy.js" })
-// //       .catch(reportExecuteScriptError);
-// //   }
-// // }
+document.getElementById("traderButton").onclick = function () {
+  send("buy");
+  browser.tabs
+    .executeScript({ file: "/src/content_scripts/instantBuy.js" })
+    .catch(console.log);
+};
 
-// /**
-//  * There was an error executing the script.
-//  * Display the popup's error message, and hide the normal UI.
-//  */
-// function reportExecuteScriptError(error) {
-//   document.querySelector("#error-content").classList.remove("hidden");
-//   console.log("Failed to execute traderMode content script: ", error);
-// }
-
-// document.getElementById("traderToggle").onchange = function () {
-//   setValue(!isOn);
-// };
-
-// document.getElementById("traderButton").onclick = function () {
-//   browser.tabs
-//     .executeScript({ file: "/src/content_scripts/instantBuy.js" })
-//     .catch(console.log);
-// };
-
-// init().catch((e) => console.log("ERROR:\n" + e));
+init().catch((e) => console.log("ERROR:\n" + e));

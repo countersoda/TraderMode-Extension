@@ -6,7 +6,8 @@
     "homepage_url": "https://github.com/countersoda/TraderMode-Extension",
     "permissions": [
         "activeTab",
-        "storage"
+        "storage",
+        "browsingData"
     ],
     "browser_action": {
         "default_icon": "src/icons/icon.png",
