@@ -1,7 +1,12 @@
 var isOn;
+var isRage;
 myStorage = browser.storage.local;
 
 let buttonOn = {
+  value: false,
+};
+
+let rageOn = {
   value: false,
 };
 
@@ -13,21 +18,54 @@ async function init() {
       value = item.buttonOn.value;
       document.querySelector("#traderCheckBox").checked = value;
       if (value === undefined) {
-        setValue(false);
+        setToggle(false);
       } else {
-        setValue(value);
+        setToggle(value);
         if (value) {
           send("init");
         }
       }
     })
     .catch(console.log);
+  myStorage
+    .get("rageOn")
+    .then((item) => {
+      value = item.rageOn.value;
+      document.querySelector("#rageCheckBox").checked = value;
+      if (value === undefined) {
+        setRage(false);
+      } else {
+        setRage(value);
+        if (value) {
+          document.querySelector("#traderCheckBox").checked = !value;
+          setToggle(false);
+          send("rage");
+        }
+      }
+    })
+    .catch(console.log);
 }
 
-async function setValue(value) {
+async function setToggle(value) {
   isOn = value;
   buttonOn.value = value;
   myStorage.set({ buttonOn });
+
+  if(isOn){
+    setRage(false)
+    document.querySelector("#rageCheckBox").checked = false;
+  }
+}
+
+async function setRage(value) {
+  isRage = value;
+  rageOn.value = value;
+  myStorage.set({ rageOn });
+
+  if(isRage){
+    setToggle(false)
+    document.querySelector("#traderCheckBox").checked = false;
+  }
 }
 
 function send(message) {
@@ -40,6 +78,15 @@ function send(message) {
   });
 }
 
+document.getElementById("traderToggle").onchange = function () {
+  setToggle(!isOn);
+};
+
+document.getElementById("rageToggle").onchange = function () {
+  setRage(!isRage);
+
+};
+
 /**
  * There was an error executing the script.
  * Display the popup's error message, and hide the normal UI.
@@ -48,10 +95,6 @@ function reportExecuteScriptError(error) {
   document.querySelector("#error-content").classList.remove("hidden");
   console.log("Failed to execute traderMode content script: ", error);
 }
-
-document.getElementById("traderToggle").onchange = function () {
-  setValue(!isOn);
-};
 
 document.getElementById("traderButton").onclick = function () {
   send("buy");

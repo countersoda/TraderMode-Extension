@@ -47,11 +47,11 @@ body {
   transition: 0.4s;
 }
 
-input:checked + .slider {
+input:checked + .slider.round {
   background-color: #f35221;
 }
 
-input:focus + .slider {
+input:focus + .slider.round {
   box-shadow: 0 0 1px #f35221;
 }
 
@@ -80,4 +80,12 @@ input:checked + .slider:before {
   background-color: #f35221;
   -webkit-transition: 0.4s;
   transition: 0.4s;
+}
+
+input:checked + .slider.rage {
+  background-color: #9300f5;
+}
+
+input:focus + .slider.rage {
+  box-shadow: 0 0 1px #9300f5;
 }
