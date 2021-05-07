@@ -1,5 +1,13 @@
 console.log("Enter content scripts");
 var counter = 0;
+
+myStorage = browser.storage.local;
+myStorage.get("buttonOn").then((value) => {
+  if (value.buttonOn.value) {
+    setTimeout(clickBuyBtn, 800);
+  }
+});
+
 instant().catch(console.log);
 
 function instant() {
@@ -7,8 +15,6 @@ function instant() {
     console.log("Request: " + request.command);
     if (request.command === "buy") {
       clickBuyBtn();
-    } else if (request.command === "init") {
-      setTimeout(() => clickBuyBtn(), 1500);
     }
     return true;
   });

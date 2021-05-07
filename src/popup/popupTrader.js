@@ -11,26 +11,23 @@ async function init() {
     .get("buttonOn")
     .then((item) => {
       value = item.buttonOn.value;
+      document.querySelector("#traderCheckBox").checked = value;
+      if (value === undefined) {
+        setValue(false);
+      } else {
+        setValue(value);
+        if (value) {
+          send("init");
+        }
+      }
     })
     .catch(console.log);
-  bVal = value === "true" ? true : false;
-  document.querySelector("#traderCheckBox").checked = bVal;
-
-  if (value === undefined) {
-    setValue(false);
-  } else {
-    setValue(bVal);
-    if (bVal) {
-      send("init");
-    }
-  }
 }
 
 async function setValue(value) {
   isOn = value;
   buttonOn.value = value;
   myStorage.set({ buttonOn });
-  console.log(buttonOn);
 }
 
 function send(message) {
