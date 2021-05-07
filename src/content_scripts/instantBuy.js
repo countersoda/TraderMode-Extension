@@ -7,8 +7,8 @@ myStorage.get("buttonOn").then((value) => {
     setTimeout(() => clickBuyBtn(), 800);
   }
 });
-myStorage.get("buttonOn").then((value) => {
-  if (value.buttonOn.value) {
+myStorage.get("rageOn").then((value) => {
+  if (value.rageOn.value) {
     setTimeout(() => rageClickBuyBtn(), 800);
   }
 });
@@ -82,7 +82,7 @@ async function rageClickConfirmBtn() {
   );
   if (confirmBtn[0] !== undefined) {
     confirmBtn[0].click();
-    setTimeout(rageDapperBuyBtn, 5 * 1000);
+    setTimeout(rageDapperBuyBtn, 8 * 1000);
   } else {
     setTimeout(rageClickConfirmBtn, 0.0001 * 1000);
     console.log("Confirm button is not available\nTrying again...");
@@ -90,15 +90,15 @@ async function rageClickConfirmBtn() {
 }
 
 async function rageDapperBuyBtn() {
-  if (counter++ > 10) return;
+  console.log('Enter Dapper Function')
   var buyBtn = await window.document.getElementsByClassName("css-ftq8xn");
   if (buyBtn[0] !== undefined) {
+    console.log('Dapper button found')
     buyBtn[0].click();
   } else {
     setTimeout(function () {
       rageDapperBuyBtn();
     }, 0.0001 * 1000);
-
-    console.log("Buy button is not available\nTrying again...");
+    console.log("Dapper button is not available\nTrying again...");
   }
 }
