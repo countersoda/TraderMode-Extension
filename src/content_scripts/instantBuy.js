@@ -59,7 +59,6 @@ async function clickConfirmBtn() {
 }
 
 async function dapperBuyBtn() {
-  console.log(counterDapper);
   if (counterDapper++ > 100) return;
 
   var buyBtn = await window.document.getElementsByClassName("css-ftq8xn");
