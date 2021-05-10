@@ -16,7 +16,7 @@ myStorage.get("rageOn").then((value) => {
   if (value.rageOn.value && !enteredDapper) {
     setTimeout(() => clickBuyBtn(), 800);
   } else if (enteredDapper) {
-    setTimeout(() => dapperBuyBtn(), 800);
+    setTimeout(() => dapperBuyBtn(), 500);
   }
 });
 
@@ -33,7 +33,7 @@ function instant() {
 
 async function clickBuyBtn() {
   if (counter++ > 50) return;
-  
+
   var buyBtn = await window.document.getElementsByClassName(
     "ButtonBase__StyledButton-sc-1qgxh2e-0 gjCpfL Button__StyledButton-ig3kkl-1 fXrqGh"
   );
