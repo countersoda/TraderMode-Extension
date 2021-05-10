@@ -17,7 +17,8 @@
     "content_scripts": [
         {
             "matches": [
-                "https://nbatopshot.com/*"
+                "https://nbatopshot.com/*",
+                "https://accounts.meetdapper.com/checkout/*"
             ],
             "js": [
                 "/src/content_scripts/instantBuy.js"
