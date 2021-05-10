@@ -16,7 +16,7 @@ myStorage.get("rageOn").then((value) => {
   if (value.rageOn.value && !enteredDapper) {
     setTimeout(() => clickBuyBtn(), 800);
   } else if (enteredDapper) {
-    setTimeout(() => dapperBuyBtn(), 500);
+    dapperBuyBtn();
   }
 });
 
