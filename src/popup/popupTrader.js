@@ -39,7 +39,6 @@ async function init() {
         if (value) {
           document.querySelector("#traderCheckBox").checked = !value;
           setToggle(false);
-          send("rage");
         }
       }
     })
