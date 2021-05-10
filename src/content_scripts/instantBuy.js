@@ -10,9 +10,13 @@ myStorage.get("buttonOn").then((value) => {
 });
 
 myStorage.get("rageOn").then((value) => {
-  if (value.rageOn.value) {
+  let enteredDapper = window.location.href.includes(
+    "https://accounts.meetdapper.com/checkout/"
+  );
+  if (value.rageOn.value && !enteredDapper) {
     setTimeout(() => clickBuyBtn(), 800);
-    setTimeout(() => dapperBuyBtn(), 2000);
+  } else if (enteredDapper) {
+    setTimeout(() => dapperBuyBtn(), 800);
   }
 });
 
@@ -29,6 +33,7 @@ function instant() {
 
 async function clickBuyBtn() {
   if (counter++ > 50) return;
+  
   var buyBtn = await window.document.getElementsByClassName(
     "ButtonBase__StyledButton-sc-1qgxh2e-0 gjCpfL Button__StyledButton-ig3kkl-1 fXrqGh"
   );
@@ -54,9 +59,11 @@ async function clickConfirmBtn() {
 }
 
 async function dapperBuyBtn() {
+  console.log(counterDapper);
   if (counterDapper++ > 100) return;
 
   var buyBtn = await window.document.getElementsByClassName("css-ftq8xn");
+
   if (buyBtn[0] !== undefined) {
     buyBtn[0].click();
   } else {
