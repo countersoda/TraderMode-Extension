@@ -1,5 +1,5 @@
-html,
-body {
+html, body {
+  font-family: Helvetica, Sans-Serif;
   width: auto;
 }
 
@@ -8,14 +8,17 @@ body {
 }
 
 /* The switch - the box around the slider */
+
 .switch {
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
+  text-align: right;
 }
 
 /* Hide default HTML checkbox */
+
 .switch input {
   opacity: 0;
   width: 0;
@@ -23,6 +26,7 @@ body {
 }
 
 /* The slider */
+
 .slider {
   position: absolute;
   cursor: pointer;
@@ -47,21 +51,22 @@ body {
   transition: 0.4s;
 }
 
-input:checked + .slider.round {
+input:checked+.slider.round {
   background-color: #f35221;
 }
 
-input:focus + .slider.round {
+input:focus+.slider.round {
   box-shadow: 0 0 1px #f35221;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
 }
 
 /* Rounded sliders */
+
 .slider.round {
   border-radius: 34px;
 }
@@ -71,21 +76,30 @@ input:checked + .slider:before {
 }
 
 .traderButton {
-  flex:auto;
   cursor: pointer;
   height: 26px;
   width: 26px;
-  left: 4px;
   bottom: 4px;
   background-color: #f35221;
   -webkit-transition: 0.4s;
   transition: 0.4s;
 }
 
-input:checked + .slider.rage {
+input:checked+.slider.rage {
   background-color: #9300f5;
 }
 
-input:focus + .slider.rage {
+input:focus+.slider.rage {
   box-shadow: 0 0 1px #9300f5;
+}
+
+.box {
+  float: left;
+  padding: 10px;
+}
+
+.img {
+  width: 280px;
+  text-align: center;
+  background-color: #020074;
 }
