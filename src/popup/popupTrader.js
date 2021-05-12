@@ -19,11 +19,9 @@ async function init() {
       document.querySelector("#traderCheckBox").checked = value;
       if (value === undefined) {
         setToggle(false);
+        setRage(false)
       } else {
         setToggle(value);
-        if (value) {
-          send("init");
-        }
       }
     })
     .catch(console.log);
@@ -83,7 +81,6 @@ document.getElementById("traderToggle").onchange = function () {
 
 document.getElementById("rageToggle").onchange = function () {
   setRage(!isRage);
-
 };
 
 /**

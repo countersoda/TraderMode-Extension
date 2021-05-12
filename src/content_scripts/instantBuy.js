@@ -9,16 +9,21 @@ myStorage.get("buttonOn").then((value) => {
   }
 });
 
-myStorage.get("rageOn").then((value) => {
+console.log("Enter script");
+browser.cookies.getAll({}).then(console.log);
+
+myStorage.get("rageOn").then(checkPageForRage);
+
+function checkPageForRage(value) {
   let enteredDapper = window.location.href.includes(
     "https://accounts.meetdapper.com/checkout/"
   );
   if (value.rageOn.value && !enteredDapper) {
     setTimeout(() => clickBuyBtn(), 800);
-  } else if (enteredDapper) {
+  } else if (value.rageOn.value && enteredDapper) {
     dapperBuyBtn();
   }
-});
+}
 
 instant().catch(console.log);
 
