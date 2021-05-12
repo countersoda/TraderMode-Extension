@@ -96,20 +96,22 @@ input:focus+.slider.rage {
 .ButtonName {
   float: left;
   padding: 10px;
+  color: white;
 }
 
 .box {
   float: right;
   padding: 5px;
+  padding-right: 20px;
 }
 
 .img {
   width: 280px;
   text-align: center;
   background-color: #020074;
+  padding: 10px
 }
 
 #popup-content {
-  border: black 2px solid;
-  background-color: rgba(226, 226, 226, 0.568);
+  background-color: #020074;
 }
