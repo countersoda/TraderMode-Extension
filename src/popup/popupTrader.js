@@ -41,13 +41,15 @@ async function init() {
   }
 }
 
-function alertDonate() {
-
-}
+function alertDonate() {}
 
 function disableToggleButton() {
   document.querySelector("#traderCheckBox").setAttribute("disabled", true);
   document.querySelector("#rageCheckBox").setAttribute("disabled", true);
+}
+function enableToggleButton() {
+  document.querySelector("#traderCheckBox").setAttribute("disabled", false);
+  document.querySelector("#rageCheckBox").setAttribute("disabled", false);
 }
 
 function initMemo(mem) {
@@ -98,7 +100,7 @@ function checkCookie() {
     }
     console.log("Exist cookie: ", !(cookie === undefined));
     console.log(cookie);
-    return cookie === undefined;
+    return true //cookie === undefined;
   });
 }
 
@@ -125,30 +127,35 @@ function hasSendSeed(raw_actions) {
   return false;
 }
 
+function setCookie() {}
+
 async function setSeed(seed) {
   memo.seed = seed;
   myStorage.set({ memo });
 }
+
 async function setToggle(value) {
   isOn = value;
   buttonOn.value = value;
   myStorage.set({ buttonOn });
+  document.querySelector("#traderCheckBox").checked = value;
+  if (isOn) setRage(false);
+}
 
-  if (isOn) {
-    setRage(false);
-    document.querySelector("#rageCheckBox").checked = false;
-  }
+function getToggle(){
+
 }
 
 async function setRage(value) {
   isRage = value;
   rageOn.value = value;
   myStorage.set({ rageOn });
+  document.querySelector("#rageCheckBox").checked = value;
+  if (isRage) setToggle(false);
+}
 
-  if (isRage) {
-    setToggle(false);
-    document.querySelector("#traderCheckBox").checked = false;
-  }
+function getRage(){
+  
 }
 
 document.getElementById("traderToggle").onchange = function () {
@@ -157,6 +164,13 @@ document.getElementById("traderToggle").onchange = function () {
 
 document.getElementById("rageToggle").onchange = function () {
   setRage(!isRage);
+};
+
+document.getElementById("donateButton").onclick = function () {
+  if (checkDonation) {
+    enableToggleButton();
+    setCookie();
+  }
 };
 
 /**
