@@ -11,6 +11,8 @@ const waxioURL = "https://wax.eosrio.io/v2/history/get_actions?&skip=75&account=
  * before   = Vor angegebener Zeit
  * skip     = Überspringen
  * ":" = %3A
+ * 
+ * https://wax.eosrio.io/v2/docs/index.html#/
  */
 
 const accountName = {
