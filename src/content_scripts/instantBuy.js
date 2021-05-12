@@ -25,17 +25,6 @@ function checkPageForRage(value) {
   }
 }
 
-instant().catch(console.log);
-
-function instant() {
-  browser.runtime.onMessage.addListener((request) => {
-    if (request.command === "buy") {
-      clickBuyBtn();
-    }
-    return true;
-  });
-}
-
 async function clickBuyBtn() {
   if (counter++ > 50) return;
 

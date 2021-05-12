@@ -27,11 +27,14 @@ async function init() {
   myStorage.get("rageOn").then(initRageButton).catch(console.log);
   myStorage.get("memo").then(initMemo).catch(console.log);
 
-  if (checkCookie()) {
-
-  } else {
-    disableToggleButton()
+  if (!checkCookie()) {
+    disableToggleButton();
   }
+}
+
+function disableToggleButton() {
+  document.querySelector("#traderCheckBox").setAttribute("disabled", true);
+  document.querySelector("#rageCheckBox").setAttribute("disabled", true);
 }
 
 function initMemo(mem) {
@@ -112,16 +115,6 @@ async function setRage(value) {
   }
 }
 
-function send(message) {
-  getTabs.then((tabs) => {
-    for (let i = 0; i < tabs.length; i++) {
-      browser.tabs
-        .sendMessage(tabs[i].id, { command: message })
-        .catch(console.log);
-    }
-  });
-}
-
 document.getElementById("traderToggle").onchange = function () {
   setToggle(!isOn);
 };
@@ -138,12 +131,5 @@ function reportExecuteScriptError(error) {
   document.querySelector("#error-content").classList.remove("hidden");
   console.log("Failed to execute traderMode content script: ", error);
 }
-
-document.getElementById("traderButton").onclick = function () {
-  send("buy");
-  browser.tabs
-    .executeScript({ file: "/src/content_scripts/instantBuy.js" })
-    .catch(console.log);
-};
 
 init().catch((e) => console.log("ERROR:\n" + e));

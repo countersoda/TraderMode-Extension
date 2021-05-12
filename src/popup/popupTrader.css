@@ -70,18 +70,6 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.traderButton {
-  flex:auto;
-  cursor: pointer;
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: #f35221;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
-}
-
 input:checked + .slider.rage {
   background-color: #9300f5;
 }
