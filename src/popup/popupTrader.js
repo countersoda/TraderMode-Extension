@@ -32,7 +32,6 @@ async function init() {
   }
   if (!(await checkCookie()) && (await checkDonation())) {
     enableToggleButton();
-    console.log("Cookie created!");
     createCookie("Eligible Cookie", "donated", true);
   }
 }
@@ -60,7 +59,7 @@ function initMemo(mem) {
   } else {
     setSeed(mem.memo.seed);
   }
-  console.log(memo);
+  document.querySelector("#waxText").textContent = memo.seed;
 }
 
 function initTradeButton(item) {
@@ -91,7 +90,6 @@ async function checkCookie() {
   let cookies = await browser.cookies.getAll({
     name: "Eligible Cookie",
   });
-  console.log(cookies);
   return cookies.length > 0;
 }
 
@@ -115,8 +113,7 @@ async function checkDonation() {
 function getActions(raw_actions, memo, till) {
   let actions = raw_actions.actions;
   for (let i = 0; i < actions.length; i++) {
-    let trace = actions[i].act;
-    // console.log(actions[i].timestamp);
+    let trace = actions[i].act;;
     if (till.getTime() > new Date(actions[i].timestamp).getTime()) {
       return [true, true];
     }
@@ -140,7 +137,6 @@ async function createCookie(name, value) {
   } else {
     expires = "";
   }
-  console.log(expires);
 
   browser.cookies.set({
     url: "https://nbatopshot.com/",

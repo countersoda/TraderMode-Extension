@@ -55,9 +55,6 @@ async function init() {
   myStorage.get("rageOn").then(initRageButton).catch(console.log);
   myStorage.get("memo").then(initMemo).catch(console.log);
 
-  console.log("Cookie is: ", await checkCookie());
-  console.log("Donation is: ", await checkDonation());
-
   if (!(await checkCookie()) || !(await checkDonation())) {
     disableToggleButton();
     alertDonate();
@@ -92,6 +89,7 @@ function initMemo(mem) {
   } else {
     setSeed(mem.memo.seed);
   }
+  document.querySelector("#waxText").textContent = memo.seed;
   console.log(memo);
 }
 

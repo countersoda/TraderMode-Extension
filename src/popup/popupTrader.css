@@ -53,11 +53,11 @@ html, body {
 }
 
 input:checked+.slider.round {
-  background-color: #f35221;
+  background-color: #de1633;
 }
 
 input:focus+.slider.round {
-  box-shadow: 0 0 1px #f35221;
+  box-shadow: 0 0 1px #de1633;
 }
 
 input:checked+.slider:before {
@@ -81,17 +81,9 @@ input:checked+.slider:before {
   height: 26px;
   width: 26px;
   bottom: 4px;
-  background-color: #f35221;
+  background-color: #de1633;
   -webkit-transition: 0.4s;
   transition: 0.4s;
-}
-
-input:checked+.slider.rage {
-  background-color: #9300f5;
-}
-
-input:focus+.slider.rage {
-  box-shadow: 0 0 1px #9300f5;
 }
 
 .ButtonName {
