@@ -96,7 +96,7 @@ async function checkDonation() {
   let skip = 0;
   let search = true;
   let timeout = false;
-  let memo = "sale";
+  let memo = "sale"; //memo.seed
   let till = new Date();
   till.setTime(till.getTime() - 7 * 24 * 60 * 60 * 1000);
 
@@ -112,7 +112,7 @@ async function checkDonation() {
 function getActions(raw_actions, memo, till) {
   let actions = raw_actions.actions;
   for (let i = 0; i < actions.length; i++) {
-    let trace = actions[i].act;;
+    let trace = actions[i].act;
     if (till.getTime() > new Date(actions[i].timestamp).getTime()) {
       return [true, true];
     }
