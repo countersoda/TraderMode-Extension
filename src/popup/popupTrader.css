@@ -116,3 +116,10 @@ input:focus+.slider.rage {
 #popup-content {
   background-color: #020074;
 }
+
+.text {
+  float: right;
+  margin: 5px;
+  padding: 5px;
+  background-color: white;
+}
