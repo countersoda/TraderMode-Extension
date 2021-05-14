@@ -71,7 +71,9 @@ async function init() {
   }
 }
 
-function alertDonate() {}
+function alertDonate() {
+  document.getElementById("alertDonate").style.visibility = "visible";
+}
 
 function disableToggleButton() {
   setToggle(false);
