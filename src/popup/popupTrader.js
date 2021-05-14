@@ -5,6 +5,8 @@ const fetch = require("node-fetch");
 fst = "https://wax.eosrio.io/v2/history/get_actions?&skip=";
 snd = "&account=k.mr2.wam&limit=100";
 
+dateForCookie;
+
 var buttonOn = {
   value: false,
 };
@@ -26,13 +28,13 @@ async function init() {
   myStorage.get("rageOn").then(initRageButton).catch(console.log);
   myStorage.get("memo").then(initMemo).catch(console.log);
 
-  if (!(await checkCookie()) || !(await checkDonation())) {
+  let hasDonated = await checkDonation();
+
+  console.log("Has donated: ", hasDonated);
+
+  if (!hasDonated) {
     disableToggleButton();
     alertDonate();
-  }
-  if (!(await checkCookie()) && (await checkDonation())) {
-    enableToggleButton();
-    createCookie("Eligible Cookie", "donated", true);
   }
 }
 
@@ -46,10 +48,10 @@ function disableToggleButton() {
   document.querySelector("#rageCheckBox").setAttribute("disabled", true);
 }
 
-function enableToggleButton() {
-  document.querySelector("#traderCheckBox").setAttribute("disabled", false);
-  document.querySelector("#rageCheckBox").setAttribute("disabled", false);
-}
+// function enableToggleButton() {
+//   document.querySelector("#traderCheckBox").setAttribute("disabled", false);
+//   document.querySelector("#rageCheckBox").setAttribute("disabled", false);
+// }
 
 //TODO Init text area for memo
 function initMemo(mem) {
@@ -85,25 +87,19 @@ function initRageButton(item) {
   }
 }
 
-async function checkCookie() {
-  let cookies = await browser.cookies.getAll({
-    name: "Eligible Cookie",
-  });
-  return cookies.length > 0;
-}
-
 async function checkDonation() {
   let skip = 0;
   let search = true;
   let timeout = false;
   let memo = "sale"; //memo.seed
   let till = new Date();
+
   till.setTime(till.getTime() - 7 * 24 * 60 * 60 * 1000);
 
   while (search && !timeout) {
     url = fst + skip + snd;
     var result = await fetch(url).then((val) => val.json());
-    [search, timeout] = getActions(result, memo, till);
+    [search, timeout, dateForCookie] = getActions(result, memo, till);
     skip += 100;
   }
   return !search;
@@ -121,28 +117,10 @@ function getActions(raw_actions, memo, till) {
       trace.data !== null &&
       trace.data.memo === memo
     ) {
-      return [false, false];
+      return [false, false, new Date(actions[i].timestamp)];
     }
   }
   return [true, false];
-}
-
-async function createCookie(name, value) {
-  let expires;
-  if (days) {
-    var date = new Date();
-    date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000);
-    expires = date.toGMTString();
-  } else {
-    expires = "";
-  }
-
-  browser.cookies.set({
-    url: "https://nbatopshot.com/",
-    name: name,
-    value: value,
-    expirationDate: date.getTime(),
-  });
 }
 
 async function setSeed(seed) {

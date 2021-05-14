@@ -42,7 +42,7 @@ async function testFetch() {
     console.log("FOUND");
   }
   if (timeout) {
-    console.log("NOT FOUND")
+    console.log("NOT FOUND");
   }
   return result;
 }
@@ -60,6 +60,7 @@ function getActions(raw_actions, memo, till) {
       trace.data !== null &&
       trace.data.memo === memo
     ) {
+      console.log(actions[i].timestamp);
       return [false, false];
     }
   }
