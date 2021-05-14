@@ -149,7 +149,7 @@ function getActions(raw_actions, memo, till) {
     if (
       trace !== undefined &&
       trace.data !== null &&
-      trace.data.memo === memo
+      trace.data.memo === memo.seed
     ) {
       return [false, false];
     }
