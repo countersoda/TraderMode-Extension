@@ -26,32 +26,44 @@ snd = "&account=k.mr2.wam&limit=100";
 async function testFetch() {
   skip = 0;
   actions = {};
-  found = false;
-  while (!found) {
+  search = true;
+  timeout = false;
+  memo = "sale";
+  till = new Date();
+  till.setTime(till.getTime() - 7 * 24 * 60 * 60 * 1000);
+  console.log(till);
+  while (search && !timeout) {
     url = fst + skip + snd;
-    let result = await fetch(url).then((val) => val.json());
-    found = getActions(result);
+    var result = await fetch(url).then((val) => val.json());
+    [search, timeout] = getActions(result, memo, till);
     skip += 100;
-    console.log(result);
   }
-
+  if (!search) {
+    console.log("FOUND");
+  }
+  if (timeout) {
+    console.log("NOT FOUND")
+  }
   return result;
 }
 
-function getActions(raw_actions) {
+function getActions(raw_actions, memo, till) {
   let actions = raw_actions.actions;
-  // console.log(actions);
   for (let i = 0; i < actions.length; i++) {
     let trace = actions[i].act;
-    // console.log(trace);
     // console.log(actions[i].timestamp);
-    // if (trace !== undefined && trace.act.data !== null) {
-    //   console.log(trace.block_time);
-    //   console.log(trace.act);
-    // }
+    if (till.getTime() > new Date(actions[i].timestamp).getTime()) {
+      return [true, true];
+    }
+    if (
+      trace !== undefined &&
+      trace.data !== null &&
+      trace.data.memo === memo
+    ) {
+      return [false, false];
+    }
   }
-  // console.log(actions.length);
-  return true;
+  return [true, false];
 }
 
 testFetch();

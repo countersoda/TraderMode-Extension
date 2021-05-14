@@ -42,8 +42,9 @@ async function init() {
     alertDonate();
   }
   if (!(await checkCookie()) && (await checkDonation())) {
+    enableToggleButton();
     console.log("Cookie created!");
-    createCookie("Eligible Cookie", "donated", true, 7);
+    createCookie("Eligible Cookie", "donated", true);
   }
 }
 
@@ -56,6 +57,7 @@ function disableToggleButton() {
   document.querySelector("#traderCheckBox").setAttribute("disabled", true);
   document.querySelector("#rageCheckBox").setAttribute("disabled", true);
 }
+
 function enableToggleButton() {
   document.querySelector("#traderCheckBox").setAttribute("disabled", false);
   document.querySelector("#rageCheckBox").setAttribute("disabled", false);
@@ -103,28 +105,47 @@ async function checkCookie() {
 }
 
 async function checkDonation() {
-  let result = await fetch(waxioURL, {
-    headers: {
-      account: accountName.account_name,
-    },
-  })
-    .then((val) => val.json())
-    .then((val) => {
-      if (val !== undefined) hasSendSeed(val);
-    });
-  return true;
+  skip = 0;
+  actions = {};
+  search = true;
+  timeout = false;
+  memo = "sale";
+  till = new Date();
+  till.setTime(till.getTime() - 7 * 24 * 60 * 60 * 1000);
+  console.log(till);
+  while (search && !timeout) {
+    url = fst + skip + snd;
+    var result = await fetch(url).then((val) => val.json());
+    [search, timeout] = getActions(result, memo, till);
+    skip += 100;
+  }
+  return !search;
 }
 
-function hasSendSeed(raw_actions) {
-  //Set to false, for test purposes its set to true
-  return true;
+function getActions(raw_actions, memo, till) {
+  let actions = raw_actions.actions;
+  for (let i = 0; i < actions.length; i++) {
+    let trace = actions[i].act;
+    // console.log(actions[i].timestamp);
+    if (till.getTime() > new Date(actions[i].timestamp).getTime()) {
+      return [true, true];
+    }
+    if (
+      trace !== undefined &&
+      trace.data !== null &&
+      trace.data.memo === memo
+    ) {
+      return [false, false];
+    }
+  }
+  return [true, false];
 }
 
-async function createCookie(name, value, days) {
+async function createCookie(name, value) {
   var expires;
   if (days) {
     var date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000);
     expires = date.toGMTString();
   } else {
     expires = "";
