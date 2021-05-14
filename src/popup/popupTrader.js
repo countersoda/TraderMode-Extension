@@ -2,7 +2,8 @@ myStorage = browser.storage.local;
 
 const fetch = require("node-fetch");
 
-const waxioURL = "https://wax.greymass.com/v1/history/get_actions";
+const waxioURL =
+  "https://wax.eosrio.io/v2/history/get_actions?&skip=75&account=k.mr2.wam&limit=50&before=2021-05-12T07%3A59%3A20.580Z";
 
 const accountName = {
   account_name: "k.mr2.wam",
@@ -32,20 +33,26 @@ async function init() {
   myStorage.get("buttonOn").then(initTradeButton).catch(console.log);
   myStorage.get("rageOn").then(initRageButton).catch(console.log);
   myStorage.get("memo").then(initMemo).catch(console.log);
-  console.log("Cookie is: ", checkCookie());
-  console.log("Donation is: ", checkDonation());
-  if (!checkCookie() || !checkDonation()) {
+
+  console.log("Cookie is: ", await checkCookie());
+  console.log("Donation is: ", await checkDonation());
+
+  if (!(await checkCookie()) || !(await checkDonation())) {
     disableToggleButton();
     alertDonate();
   }
-  if (checkDonation && !checkCookie()) {
-    createCookie("Eligible Cookie", "Eligible Cookie", true, 7);
+  if (!(await checkCookie()) && (await checkDonation())) {
+    console.log("Cookie created!");
+    createCookie("Eligible Cookie", "donated", true, 7);
   }
 }
 
 function alertDonate() {}
 
 function disableToggleButton() {
+  setToggle(false);
+  setRage(false);
+
   document.querySelector("#traderCheckBox").setAttribute("disabled", true);
   document.querySelector("#rageCheckBox").setAttribute("disabled", true);
 }
@@ -65,7 +72,7 @@ function initMemo(mem) {
 }
 
 function initTradeButton(item) {
-  if (item === undefined) {
+  if (item.buttonOn === undefined) {
     setToggle(false);
   } else {
     value = item.buttonOn.value;
@@ -75,7 +82,7 @@ function initTradeButton(item) {
 }
 
 function initRageButton(item) {
-  if (item === undefined) {
+  if (item.rageOn === undefined) {
     setRage(false);
   } else {
     value = item.rageOn.value;
@@ -88,63 +95,49 @@ function initRageButton(item) {
   }
 }
 
-function checkCookie() {
-  getTabs.then((tabs) => {
-    var cookie = undefined;
-    for (let i = 0; i < tabs.length; i++) {
-      var getting = browser.cookies.get({
-        url: tabs[i].url,
-        name: "Eligible Cookie",
-      });
-      if (getting) {
-        console.log(getting);
-        cookie = getting.value;
-        break;
-      }
-    }
-    console.log("Exist cookie: ", !(cookie === undefined));
-    // console.log(cookie);
-    return true; //cookie === undefined;
+async function checkCookie() {
+  let cookies = await browser.cookies.getAll({
+    name: "Eligible Cookie",
   });
+  return cookies.length > 0;
 }
 
 async function checkDonation() {
   let result = await fetch(waxioURL, {
-    method: "post",
-    body: JSON.stringify(accountName),
+    headers: {
+      account: accountName.account_name,
+    },
   })
     .then((val) => val.json())
-    .then(hasSendSeed);
-  console.log("Check donation: ", result);
-  return result;
+    .then((val) => {
+      if (val !== undefined) hasSendSeed(val);
+    });
+  return true;
 }
 
 function hasSendSeed(raw_actions) {
-  let actions = raw_actions.actions;
-  for (let i = 0; i < actions.length; i++) {
-    let trace = actions[i].action_trace;
-    let waxMemo = trace.act.data.memo;
-    if (trace !== undefined && waxMemo === memo.seed) {
-      return true;
-    }
-  }
   //Set to false, for test purposes its set to true
   return true;
 }
 
-function createCookie(name, value, days) {
+async function createCookie(name, value, days) {
   var expires;
   if (days) {
     var date = new Date();
     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    expires = "; expires=" + date.toGMTString();
+    expires = date.toGMTString();
   } else {
     expires = "";
   }
-  document.cookie = name + "=" + value + expires + "; path=/";
-}
+  console.log(expires);
 
-function setCookie() {}
+  browser.cookies.set({
+    url: "https://nbatopshot.com/",
+    name: name,
+    value: value,
+    expirationDate: date.getTime(),
+  });
+}
 
 async function setSeed(seed) {
   memo.seed = seed;
@@ -175,20 +168,11 @@ document.getElementById("rageToggle").onchange = function () {
   setRage(!isRage);
 };
 
-document.getElementById("donateButton").onclick = function () {
-  if (checkDonation) {
-    enableToggleButton();
-    setCookie();
-  }
-};
-
-/**
- * There was an error executing the script.
- * Display the popup's error message, and hide the normal UI.
- */
-function reportExecuteScriptError(error) {
-  document.querySelector("#error-content").classList.remove("hidden");
-  console.log("Failed to execute traderMode content script: ", error);
-}
+// document.getElementById("donateButton").onclick = function () {
+//   if (checkDonation) {
+//     enableToggleButton();
+//     createCookie();
+//   }
+// };
 
 init().catch((e) => console.log("ERROR:\n" + e));

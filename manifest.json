@@ -8,7 +8,9 @@
         "activeTab",
         "storage",
         "tabs",
-        "cookies"
+        "cookies",
+        "browsingData",
+        "<all_urls>"
     ],
     "browser_action": {
         "default_icon": "src/icons/icon.png",
