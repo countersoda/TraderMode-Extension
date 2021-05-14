@@ -31,12 +31,8 @@ myStorage = browser.storage.local;
 
 const fetch = require("node-fetch");
 
-const waxioURL =
-  "https://wax.eosrio.io/v2/history/get_actions?&skip=75&account=k.mr2.wam&limit=50&before=2021-05-12T07%3A59%3A20.580Z";
-
-const accountName = {
-  account_name: "k.mr2.wam",
-};
+fst = "https://wax.eosrio.io/v2/history/get_actions?&skip=";
+snd = "&account=k.mr2.wam&limit=100";
 
 var buttonOn = {
   value: false,
@@ -49,10 +45,6 @@ var rageOn = {
 var memo = {
   seed: "",
 };
-
-var getTabs = browser.tabs.query({
-  currentWindow: true,
-});
 
 const random = (length = 10) => {
   return Math.random().toString(16).substr(2, length);
@@ -71,8 +63,9 @@ async function init() {
     alertDonate();
   }
   if (!(await checkCookie()) && (await checkDonation())) {
+    enableToggleButton();
     console.log("Cookie created!");
-    createCookie("Eligible Cookie", "donated", true, 7);
+    createCookie("Eligible Cookie", "donated", true);
   }
 }
 
@@ -85,6 +78,7 @@ function disableToggleButton() {
   document.querySelector("#traderCheckBox").setAttribute("disabled", true);
   document.querySelector("#rageCheckBox").setAttribute("disabled", true);
 }
+
 function enableToggleButton() {
   document.querySelector("#traderCheckBox").setAttribute("disabled", false);
   document.querySelector("#rageCheckBox").setAttribute("disabled", false);
@@ -92,12 +86,13 @@ function enableToggleButton() {
 
 //TODO Init text area for memo
 function initMemo(mem) {
-  if (mem.memo === undefined) {
+  console.log(mem.memo);
+  if (mem.memo === undefined || mem.memo.seed === undefined) {
     setSeed(random());
   } else {
     setSeed(mem.memo.seed);
   }
-  console.log(memo.seed);
+  console.log(memo);
 }
 
 function initTradeButton(item) {
@@ -114,7 +109,7 @@ function initRageButton(item) {
   if (item.rageOn === undefined) {
     setRage(false);
   } else {
-    value = item.rageOn.value;
+    let value = item.rageOn.value;
     document.querySelector("#rageCheckBox").checked = value;
     setRage(value);
     if (value) {
@@ -128,32 +123,51 @@ async function checkCookie() {
   let cookies = await browser.cookies.getAll({
     name: "Eligible Cookie",
   });
+  console.log(cookies);
   return cookies.length > 0;
 }
 
 async function checkDonation() {
-  let result = await fetch(waxioURL, {
-    headers: {
-      account: accountName.account_name,
-    },
-  })
-    .then((val) => val.json())
-    .then((val) => {
-      if (val !== undefined) hasSendSeed(val);
-    });
-  return true;
+  let skip = 0;
+  let search = true;
+  let timeout = false;
+  let memo = "sale";
+  let till = new Date();
+  till.setTime(till.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+  while (search && !timeout) {
+    url = fst + skip + snd;
+    var result = await fetch(url).then((val) => val.json());
+    [search, timeout] = getActions(result, memo, till);
+    skip += 100;
+  }
+  return !search;
 }
 
-function hasSendSeed(raw_actions) {
-  //Set to false, for test purposes its set to true
-  return true;
+function getActions(raw_actions, memo, till) {
+  let actions = raw_actions.actions;
+  for (let i = 0; i < actions.length; i++) {
+    let trace = actions[i].act;
+    // console.log(actions[i].timestamp);
+    if (till.getTime() > new Date(actions[i].timestamp).getTime()) {
+      return [true, true];
+    }
+    if (
+      trace !== undefined &&
+      trace.data !== null &&
+      trace.data.memo === memo
+    ) {
+      return [false, false];
+    }
+  }
+  return [true, false];
 }
 
-async function createCookie(name, value, days) {
-  var expires;
+async function createCookie(name, value) {
+  let expires;
   if (days) {
     var date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000);
     expires = date.toGMTString();
   } else {
     expires = "";

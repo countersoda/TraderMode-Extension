@@ -2,12 +2,8 @@ myStorage = browser.storage.local;
 
 const fetch = require("node-fetch");
 
-const waxioURL =
-  "https://wax.eosrio.io/v2/history/get_actions?&skip=75&account=k.mr2.wam&limit=50&before=2021-05-12T07%3A59%3A20.580Z";
-
-const accountName = {
-  account_name: "k.mr2.wam",
-};
+fst = "https://wax.eosrio.io/v2/history/get_actions?&skip=";
+snd = "&account=k.mr2.wam&limit=100";
 
 var buttonOn = {
   value: false,
@@ -21,10 +17,6 @@ var memo = {
   seed: "",
 };
 
-var getTabs = browser.tabs.query({
-  currentWindow: true,
-});
-
 const random = (length = 10) => {
   return Math.random().toString(16).substr(2, length);
 };
@@ -33,9 +25,6 @@ async function init() {
   myStorage.get("buttonOn").then(initTradeButton).catch(console.log);
   myStorage.get("rageOn").then(initRageButton).catch(console.log);
   myStorage.get("memo").then(initMemo).catch(console.log);
-
-  console.log("Cookie is: ", await checkCookie());
-  console.log("Donation is: ", await checkDonation());
 
   if (!(await checkCookie()) || !(await checkDonation())) {
     disableToggleButton();
@@ -65,12 +54,13 @@ function enableToggleButton() {
 
 //TODO Init text area for memo
 function initMemo(mem) {
-  if (mem.memo === undefined) {
+  console.log(mem.memo);
+  if (mem.memo === undefined || mem.memo.seed === undefined) {
     setSeed(random());
   } else {
     setSeed(mem.memo.seed);
   }
-  console.log(memo.seed);
+  console.log(memo);
 }
 
 function initTradeButton(item) {
@@ -87,7 +77,7 @@ function initRageButton(item) {
   if (item.rageOn === undefined) {
     setRage(false);
   } else {
-    value = item.rageOn.value;
+    let value = item.rageOn.value;
     document.querySelector("#rageCheckBox").checked = value;
     setRage(value);
     if (value) {
@@ -101,18 +91,18 @@ async function checkCookie() {
   let cookies = await browser.cookies.getAll({
     name: "Eligible Cookie",
   });
+  console.log(cookies);
   return cookies.length > 0;
 }
 
 async function checkDonation() {
-  skip = 0;
-  actions = {};
-  search = true;
-  timeout = false;
-  memo = "sale";
-  till = new Date();
+  let skip = 0;
+  let search = true;
+  let timeout = false;
+  let memo = "sale";
+  let till = new Date();
   till.setTime(till.getTime() - 7 * 24 * 60 * 60 * 1000);
-  console.log(till);
+
   while (search && !timeout) {
     url = fst + skip + snd;
     var result = await fetch(url).then((val) => val.json());
@@ -142,7 +132,7 @@ function getActions(raw_actions, memo, till) {
 }
 
 async function createCookie(name, value) {
-  var expires;
+  let expires;
   if (days) {
     var date = new Date();
     date.setTime(date.getTime() + 7 * 24 * 60 * 60 * 1000);
