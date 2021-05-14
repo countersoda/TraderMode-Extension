@@ -5,8 +5,6 @@ const fetch = require("node-fetch");
 fst = "https://wax.eosrio.io/v2/history/get_actions?&skip=";
 snd = "&account=k.mr2.wam&limit=100";
 
-dateForCookie;
-
 var buttonOn = {
   value: false,
 };
@@ -18,6 +16,12 @@ var rageOn = {
 var memo = {
   seed: "",
 };
+
+async function getSeed() {
+  return await myStorage.get("memo").then((val) => {
+    return val.memo;
+  });
+}
 
 const random = (length = 10) => {
   return Math.random().toString(16).substr(2, length);
@@ -91,7 +95,7 @@ async function checkDonation() {
   let skip = 0;
   let search = true;
   let timeout = false;
-  let memo = "sale"; //memo.seed
+  let memo = await getSeed();
   let till = new Date();
 
   till.setTime(till.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -99,9 +103,10 @@ async function checkDonation() {
   while (search && !timeout) {
     url = fst + skip + snd;
     var result = await fetch(url).then((val) => val.json());
-    [search, timeout, dateForCookie] = getActions(result, memo, till);
+    [search, timeout] = getActions(result, memo, till);
     skip += 100;
   }
+
   return !search;
 }
 
@@ -117,7 +122,7 @@ function getActions(raw_actions, memo, till) {
       trace.data !== null &&
       trace.data.memo === memo
     ) {
-      return [false, false, new Date(actions[i].timestamp)];
+      return [false, false];
     }
   }
   return [true, false];
@@ -159,4 +164,4 @@ document.getElementById("rageToggle").onchange = function () {
 //   }
 // };
 
-init().catch((e) => console.log("ERROR:\n" + e));
+init().catch(console.log);
