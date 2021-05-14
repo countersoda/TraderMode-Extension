@@ -53,7 +53,6 @@ function enableToggleButton() {
 
 //TODO Init text area for memo
 function initMemo(mem) {
-  console.log(mem.memo);
   if (mem.memo === undefined || mem.memo.seed === undefined) {
     setSeed(random());
   } else {
