@@ -28,6 +28,7 @@ const random = (length = 10) => {
 };
 
 async function init() {
+  // await setSeed("0b72db3fe5");
   disableToggleButton();
   myStorage.get("memo").then(initMemo).catch(console.log);
 
@@ -46,6 +47,7 @@ async function init() {
 
 function alertDonate() {
   document.getElementById("alertDonate").style.visibility = "visible";
+  document.getElementById("alertDonate").innerHTML = "No donation found!";
 }
 
 function disableToggleButton() {
@@ -129,6 +131,10 @@ function getActions(raw_actions, memo, till) {
     if (till.getTime() > new Date(actions[i].timestamp).getTime()) {
       return [true, true];
     }
+
+    console.log(new String(trace.data.memo));
+    let test = new String(trace.data.memo).normalize();
+    console.log(test);
     if (
       trace !== undefined &&
       trace.data !== null &&
