@@ -50,7 +50,7 @@ var timestamp = {
   date: -1,
 };
 
-const weekVal = 1000; //7 * 24 * 60 * 60 * 1000;
+const weekVal = 7 * 24 * 60 * 60 * 1000;
 
 const random = (length = 10) => {
   return Math.random().toString(16).substr(2, length);
