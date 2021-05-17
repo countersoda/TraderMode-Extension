@@ -31,8 +31,8 @@ myStorage = browser.storage.local;
 
 const fetch = require("node-fetch");
 
-fst = "https://wax.eosrio.io/v2/history/get_actions?&skip=";
-snd = "&account=k.mr2.wam&limit=100";
+const fst = "https://wax.eosrio.io/v2/history/get_actions?&skip=";
+const snd = "&account=k.mr2.wam&limit=100";
 
 var buttonOn = {
   value: false,
@@ -50,6 +50,8 @@ var timestamp = {
   date: -1,
 };
 
+const weekVal = 1000; //7 * 24 * 60 * 60 * 1000;
+
 const random = (length = 10) => {
   return Math.random().toString(16).substr(2, length);
 };
@@ -65,6 +67,7 @@ async function init() {
   if (!hasDonated) {
     disableToggleButton();
     alertDonate();
+    setTime(-1);
   } else {
     enableToggleButton();
     document.getElementById("alertDonate").style.visibility = "hidden";
@@ -127,13 +130,14 @@ function initRageButton(item) {
 }
 
 async function checkDonation() {
+  if (new Date().getTime() - (await getTime()) < weekVal) return true;
   let skip = 0;
   let search = true;
   let timeout = false;
   let memo = await getSeed();
   let till = new Date();
 
-  till.setTime(till.getTime() - 7 * 24 * 60 * 60 * 1000);
+  till.setTime(till.getTime() - weekVal); //7 * 24 * 60 * 60 * 1000
 
   while (search && !timeout) {
     url = fst + skip + snd;
@@ -158,9 +162,9 @@ function getActions(raw_actions, memo, till) {
       new String(trace.data.memo)
         .replace("\n", "")
         .replace("\n", "")
-        .localeCompare(new String(memo.seed))
+        .localeCompare(new String(memo.seed)) === 0
     ) {
-      setTime(new Date(actions[i].timestamp).getTime());
+      setTime(new Date(actions[i].timestamp).getTime() + 2 * 60 * 60 * 1000);
       return [false, false];
     }
   }
@@ -186,7 +190,7 @@ async function setTime(time) {
 async function getTime() {
   return await myStorage.get("timestamp").then((val) => {
     if (val.timestamp) return val.timestamp.date;
-    return new Date().getTime();
+    return null;
   });
 }
 
@@ -216,9 +220,10 @@ document.getElementById("rageToggle").onchange = function () {
 
 // Update the count down every 1 second
 setInterval(async function () {
+  if (now - date > weekVal) return;
   // Get today's date and time
   var now = new Date().getTime();
-  var week = 7 * 24 * 60 * 60 * 1000;
+  var week = weekVal;
   // Find the distance between now and the count down date
   var date = await getTime();
   var distance = week - (now - date);
