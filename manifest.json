@@ -17,6 +17,11 @@
         "default_title": "TraderMode",
         "default_popup": "src/popup/popupTrader.html"
     },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "sono00@web.de"
+        }
+    },
     "content_scripts": [
         {
             "matches": [
