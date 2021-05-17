@@ -121,7 +121,6 @@ async function checkDonation() {
         console.log(e);
         alertDonate();
       });
-    await new Promise((r) => setTimeout(r, 1000));
     [search, timeout] = getActions(result, memo, till);
     skip += 100;
   }
