@@ -115,7 +115,13 @@ async function checkDonation() {
 
   while (search && !timeout) {
     url = fst + skip + snd;
-    var result = await fetch(url).then((val) => val.json());
+    var result = await fetch(url)
+      .then((val) => val.json())
+      .catch((e) => {
+        console.log(e);
+        alertDonate();
+      });
+    await new Promise((r) => setTimeout(r, 1000));
     [search, timeout] = getActions(result, memo, till);
     skip += 100;
   }
@@ -125,15 +131,12 @@ async function checkDonation() {
 
 function getActions(raw_actions, memo, till) {
   let actions = raw_actions.actions;
+  if (actions.length === 0) return [true, true];
   for (let i = 0; i < actions.length; i++) {
     let trace = actions[i].act;
     if (till.getTime() > new Date(actions[i].timestamp).getTime()) {
       return [true, true];
     }
-
-    console.log(new String(trace.data.memo));
-    let test = new String(trace.data.memo).normalize();
-    console.log(test);
     if (
       trace !== undefined &&
       trace.data !== null &&
