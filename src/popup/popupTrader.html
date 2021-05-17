@@ -15,7 +15,7 @@
 
   <div id="popup-content">
 
-    <!-- Rounded switch -->
+    <!-- trader mode switch -->
     <div class="ButtonName"><b>trader mode</b><sup> <span
           title="While active, the buy assistant will automatically click the buttons on page entrance when buying a specific moment"
           style="cursor: pointer;">(i)</span>
@@ -29,7 +29,7 @@
     </div>
     </br> </br> </br>
 
-    <!-- Square switch -->
+    <!-- rage switch -->
     <div class="ButtonName"> <b>rage mode </b><sup> <span
           title="While active, the buy assistant will automatically buy the moment if available"
           style="cursor: pointer;">(i)</span></sup>
@@ -41,7 +41,7 @@
       </label>
     </div> </br></br></br>
 
-    <!-- Textarea -->
+    <!-- memo field -->
     <div class="ButtonName"> <b>memo for WAX </b><sup> <span
           title="Please donate any amount of WAX to k.mr2.wam with the given memo."
           style="cursor: pointer;">(i)</span></sup>
@@ -49,24 +49,27 @@
     <div class="box">
       <b id="waxText" class="text"></b>
     </div>
-    </br></br>
+    </br></br></br>
+
+    <!-- Status field -->
     <div>
       <div class="ButtonName">
         <b>Status</b>
       </div>
+    </div>
 
-      <div class="box">
-        <div class="timestamp">
-          <p id="countdown" class="countdownText"></p>
-        </div>
-        <div id="alertDonate" class="nodonation">
-          <p></p>
-        </div>
-      </div>
+    <div id="alertDonate" class="nodonation">
+      <p></p>
+    </div>
+    <div class="timestamp">
+      <p id="countdown" class="countdownText"></p>
     </div>
 
 
-      <script src="main.js"></script>
+
+
+
+    <script src="main.js"></script>
 </body>
 
 </html>
