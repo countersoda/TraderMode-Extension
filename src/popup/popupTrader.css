@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   font-family: Helvetica, Sans-Serif;
   width: auto;
   background-color: #020074;
@@ -52,15 +53,15 @@ html, body {
   transition: 0.4s;
 }
 
-input:checked+.slider.round {
+input:checked + .slider.round {
   background-color: #de1633;
 }
 
-input:focus+.slider.round {
+input:focus + .slider.round {
   box-shadow: 0 0 1px #de1633;
 }
 
-input:checked+.slider:before {
+input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
@@ -117,16 +118,9 @@ input:checked+.slider:before {
   background-color: #020074;
 }
 
-.nodonation {
+.status {
   color: orange;
   text-align: right;
   margin: 10px;
   padding-bottom: 10px;
-  visibility: hidden;
-}
-
-.countdownText {
-  text-align: center;
-  font-weight: bold;
-  color: rgb(4, 223, 4);
 }

@@ -69,25 +69,24 @@ async function init() {
     myStorage.get("timestamp").then(initTimestamp).catch(console.log);
     myStorage.get("buttonOn").then(initTradeButton).catch(console.log);
     myStorage.get("rageOn").then(initRageButton).catch(console.log);
-    document.getElementById("alertDonate").style.visibility = "hidden";
   }
 }
 
 function alertDonate() {
-  document.getElementById("alertDonate").style.visibility = "visible";
-  document.getElementById("alertDonate").innerHTML = "No donation found!";
+  document.getElementById("status").style = "visible";
+  document.getElementById("status").innerHTML = "No donation found!";
 }
 
 function disableToggleButton() {
   setToggle(false);
   setRage(false);
-  document.querySelector("#traderCheckBox").setAttribute("disabled", true);
-  document.querySelector("#rageCheckBox").setAttribute("disabled", true);
+  document.getElementById("traderCheckBox").disabled = true;
+  document.getElementById("rageCheckBox").disabled = true;
 }
 
 function enableToggleButton() {
-  document.querySelector("#traderCheckBox").setAttribute("enabled", true);
-  document.querySelector("#rageCheckBox").setAttribute("endabled", true);
+  document.getElementById("traderCheckBox").disabled = false;
+  document.getElementById("rageCheckBox").disabled = false;
 }
 
 function initTimestamp(time) {
@@ -150,7 +149,6 @@ async function checkDonation() {
         console.log(e);
         alertDonate();
       });
-    await new Promise((r) => setTimeout(r, 1000));
     [search, timeout] = getActions(result, memo, till);
     skip += 100;
   }
@@ -243,14 +241,13 @@ setInterval(async function () {
   var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
   var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  // Display the result in the element with id="demo"
-  document.getElementById("countdown").innerHTML =
-    days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
   // If the count down is finished, write some text
   if (distance < 0) {
-    // clearInterval(x);
-    document.getElementById("countdown").innerHTML = "";
+    alertDonate();
+  } else {
+    document.getElementById("status").innerHTML =
+      days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+    document.getElementById("status").style.color = "#04df04";
   }
 }, 1000);
 
