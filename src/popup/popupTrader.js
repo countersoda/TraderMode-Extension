@@ -29,18 +29,17 @@ const random = (length = 10) => {
 
 async function init() {
   disableToggleButton();
-  myStorage.get("timestamp").then(initTimestamp).catch(console.log);
-  myStorage.get("buttonOn").then(initTradeButton).catch(console.log);
-  myStorage.get("rageOn").then(initRageButton).catch(console.log);
   myStorage.get("memo").then(initMemo).catch(console.log);
 
   let hasDonated = await checkDonation();
-
   if (!hasDonated) {
     alertDonate();
     setTime(-1);
   } else {
     enableToggleButton();
+    myStorage.get("timestamp").then(initTimestamp).catch(console.log);
+    myStorage.get("buttonOn").then(initTradeButton).catch(console.log);
+    myStorage.get("rageOn").then(initRageButton).catch(console.log);
     document.getElementById("alertDonate").style.visibility = "hidden";
   }
 }
