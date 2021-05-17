@@ -3,7 +3,7 @@ myStorage = browser.storage.local;
 const fetch = require("node-fetch");
 
 const fst = "https://wax.eosrio.io/v2/history/get_actions?&skip=";
-const snd = "&account=k.mr2.wam&limit=100";
+const snd = "&account=yznbq.wam&limit=100";
 
 var buttonOn = {
   value: false,
@@ -28,7 +28,6 @@ const random = (length = 10) => {
 };
 
 async function init() {
-  // await setSeed("0b72db3fe5");
   disableToggleButton();
   myStorage.get("memo").then(initMemo).catch(console.log);
 
