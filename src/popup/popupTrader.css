@@ -124,3 +124,7 @@ input:checked + .slider:before {
   margin: 10px;
   padding-bottom: 10px;
 }
+
+.address {
+  font-size: x-small;
+}
