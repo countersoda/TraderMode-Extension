@@ -156,7 +156,6 @@ function getActions(raw_actions, memo, till) {
         .replace("\n", "")
         .localeCompare(new String(memo.seed)) === 0
     ) {
-      console.log(actions[i].block_time);
       setTime(new Date(actions[i].block_time).getTime() + 2 * 60 * 60 * 1000);
       return [false, false];
     }
