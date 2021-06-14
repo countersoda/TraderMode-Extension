@@ -2,8 +2,13 @@ myStorage = browser.storage.local;
 
 const fetch = require("node-fetch");
 
-const fst = "https://wax.eosrio.io/v2/history/get_actions?&skip=";
-const snd = "&account=yznbq.wam&limit=100";
+const API_URL = "https://wax.greymass.com/v1/history/get_actions";
+
+var body = {
+  account_name: "yznbq.wam",
+  skip: 0,
+  limit: 100,
+};
 
 var buttonOn = {
   value: false,
@@ -113,9 +118,16 @@ async function checkDonation() {
   till.setTime(till.getTime() - weekVal); //7 * 24 * 60 * 60 * 1000
 
   while (search && !timeout) {
-    url = fst + skip + snd;
-    var result = await fetch(url)
-      .then((val) => val.json())
+    body.skip = skip;
+    var result = await fetch(API_URL, {
+      method: "post",
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((val) => {
+        console.log(val);
+        return val.json();
+      })
       .catch((e) => {
         console.log(e);
         alertDonate();
