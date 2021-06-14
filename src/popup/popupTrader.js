@@ -26,6 +26,8 @@ var timestamp = {
   date: -1,
 };
 
+var isOn, isRage;
+
 const weekVal = 7 * 24 * 60 * 60 * 1000;
 
 const random = (length = 10) => {
@@ -33,18 +35,18 @@ const random = (length = 10) => {
 };
 
 async function init() {
-  disableToggleButton();
   myStorage.get("memo").then(initMemo).catch(console.log);
 
   let hasDonated = await checkDonation();
   if (!hasDonated) {
+    disableToggleButton();
     alertDonate();
     setTime(-1);
   } else {
-    enableToggleButton();
     myStorage.get("timestamp").then(initTimestamp).catch(console.log);
     myStorage.get("buttonOn").then(initTradeButton).catch(console.log);
     myStorage.get("rageOn").then(initRageButton).catch(console.log);
+    enableToggleButton();
   }
 }
 
@@ -125,7 +127,6 @@ async function checkDonation() {
       headers: { "Content-Type": "application/json" },
     })
       .then((val) => {
-        console.log(val);
         return val.json();
       })
       .catch((e) => {
@@ -143,7 +144,7 @@ function getActions(raw_actions, memo, till) {
   let actions = raw_actions.actions;
   if (actions.length === 0) return [true, true];
   for (let i = 0; i < actions.length; i++) {
-    let trace = actions[i].act;
+    let trace = actions[i].action_trace.act;
     if (till.getTime() > new Date(actions[i].timestamp).getTime()) {
       return [true, true];
     }
@@ -155,7 +156,8 @@ function getActions(raw_actions, memo, till) {
         .replace("\n", "")
         .localeCompare(new String(memo.seed)) === 0
     ) {
-      setTime(new Date(actions[i].timestamp).getTime() + 2 * 60 * 60 * 1000);
+      console.log(actions[i].block_time);
+      setTime(new Date(actions[i].block_time).getTime() + 2 * 60 * 60 * 1000);
       return [false, false];
     }
   }
