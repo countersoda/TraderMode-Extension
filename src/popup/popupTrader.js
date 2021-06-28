@@ -230,7 +230,7 @@ setInterval(async function () {
   if (distance < 0) {
     alertDonate();
   } else {
-    document.getElementById("status").innerHTML =
+    document.getElementById("status").textContent =
       days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
     document.getElementById("status").style.color = "#04df04";
   }
