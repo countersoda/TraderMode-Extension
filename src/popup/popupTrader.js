@@ -143,9 +143,10 @@ async function checkDonation() {
 function getActions(raw_actions, memo, till) {
   let actions = raw_actions.actions;
   if (actions.length === 0) return [true, true];
-  for (let i = 0; i < actions.length; i++) {
+
+  for (let i = actions.length - 1; i > 0; i--) {
     let trace = actions[i].action_trace.act;
-    if (till.getTime() > new Date(actions[i].timestamp).getTime()) {
+    if (till.getTime() > new Date(actions[i].block_time).getTime()) {
       return [true, true];
     }
     if (
@@ -174,7 +175,7 @@ async function getSeed() {
   });
 }
 
-async function setTime(time) {
+function setTime(time) {
   timestamp.date = time;
   myStorage.set({ timestamp });
 }
@@ -212,12 +213,12 @@ document.getElementById("rageToggle").onchange = function () {
 
 // Update the count down every 1 second
 setInterval(async function () {
-  if (now - date > weekVal) return;
   // Get today's date and time
   var now = new Date().getTime();
   var week = weekVal;
   // Find the distance between now and the count down date
   var date = await getTime();
+  console.log(now > date);
   var distance = week - (now - date);
   // Time calculations for days, hours, minutes and seconds
   var days = Math.floor(distance / (1000 * 60 * 60 * 24));
